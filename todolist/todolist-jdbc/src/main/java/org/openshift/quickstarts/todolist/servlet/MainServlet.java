@@ -1,5 +1,6 @@
 package org.openshift.quickstarts.todolist.servlet;
 
+import io.prometheus.client.CollectorRegistry;
 import org.openshift.quickstarts.todolist.model.TodoEntry;
 import org.openshift.quickstarts.todolist.service.TodoListService;
 
@@ -19,6 +20,24 @@ import java.io.PrintWriter;
 public class MainServlet extends HttpServlet {
 
     private TodoListService todoListService = new TodoListService();
+
+    private CollectorRegistry registry;
+
+    /**
+     * Construct a MainServlet for the given registry.
+     *
+     * @param registry collector registry
+     */
+    public MainServlet(CollectorRegistry registry) {
+        this.registry = registry;
+    }
+
+    /**
+     * Construct a MainServlet for the default registry.
+     */
+    public MainServlet() {
+        this(CollectorRegistry.defaultRegistry);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
