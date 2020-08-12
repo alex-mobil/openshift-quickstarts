@@ -1,5 +1,7 @@
 package org.openshift.quickstarts.todolist.dao;
 
+import org.apache.log4j.Logger;
+import org.hsqldb.jdbc.JDBCDataSource;
 import org.openshift.quickstarts.todolist.model.TodoEntry;
 
 import javax.naming.Context;
@@ -12,23 +14,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 /**
- *  TODO: proper exception handling
- *  TODO: initialize schema whenever necessary (what if db is not persistent and is restarted while app is running)
+ * TODO: proper exception handling
+ * TODO: initialize schema whenever necessary (what if db is not persistent and is restarted while app is running)
  */
 public class JdbcTodoListDAO implements TodoListDAO {
+    Logger logger = Logger.getLogger(JdbcTodoListDAO.class);
 
-    private final DataSource dataSource;
-
-    public JdbcTodoListDAO() {
-        dataSource = lookupDataSource();
-        initializeSchemaIfNeeded();
-    }
+    private DataSource dataSource;
 
     private DataSource lookupDataSource() {
         try {
             Context initialContext = new InitialContext();
             try {
+                if (System.getenv("DB_JNDI") == null) {
+                    JDBCDataSource ds = new JDBCDataSource();
+                    ds.setURL("jdbc:hsqldb:mem:sampledb;sql.syntax_mys=true");
+                    ds.setUser("sa");
+                    ds.setPassword("sa");
+                    return ds;
+                }
                 return (DataSource) initialContext.lookup(System.getenv("DB_JNDI"));
             } catch (NameNotFoundException e) {
                 Context envContext = (Context) initialContext.lookup("java:comp/env");  // Tomcat places datasources inside java:comp/env
@@ -51,6 +57,8 @@ public class JdbcTodoListDAO implements TodoListDAO {
                     } finally {
                         statement.close();
                     }
+                    List<TodoEntry> liste = list();
+                    logger.debug("Anzahl Einträge <" + liste.size() + ">");
                 }
             } finally {
                 connection.close();
@@ -131,7 +139,20 @@ public class JdbcTodoListDAO implements TodoListDAO {
         return getDataSource().getConnection();
     }
 
+    /**
+     * Public Setter for testing purposes.
+     *
+     * @param dataSource
+     */
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     private DataSource getDataSource() {
+        if (dataSource == null) {
+            dataSource = lookupDataSource();
+            initializeSchemaIfNeeded();
+        }
         return dataSource;
     }
 }

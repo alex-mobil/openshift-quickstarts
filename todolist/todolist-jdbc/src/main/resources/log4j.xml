@@ -14,7 +14,6 @@
         <param name="append" value="false" />
         <param name="maxFileSize" value="10KB" />
         <param name="maxBackupIndex" value="5" />
-        <!-- For Tomcat -->
         <param name="file" value="/tmp/audit.log" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"

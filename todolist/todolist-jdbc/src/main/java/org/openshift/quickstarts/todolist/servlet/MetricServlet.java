@@ -19,14 +19,14 @@ import java.util.Set;
  * The MetricsServlet class exists to provide a simple way of exposing the metrics values.
  *
  */
-public class MetricsServlet extends HttpServlet {
+public class MetricServlet extends HttpServlet {
 
     private CollectorRegistry registry;
 
     /**
      * Construct a MetricsServlet for the default registry.
      */
-    public MetricsServlet() {
+    public MetricServlet() {
         this(CollectorRegistry.defaultRegistry);
     }
 
@@ -34,7 +34,7 @@ public class MetricsServlet extends HttpServlet {
      * Construct a MetricsServlet for the given registry.
      * @param registry collector registry
      */
-    public MetricsServlet(CollectorRegistry registry) {
+    public MetricServlet(CollectorRegistry registry) {
         this.registry = registry;
     }
 

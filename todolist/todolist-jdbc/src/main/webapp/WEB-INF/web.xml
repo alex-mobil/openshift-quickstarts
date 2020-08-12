@@ -11,7 +11,7 @@
     <servlet>
         <display-name>MetricServlet</display-name>
         <servlet-name>MetricServlet</servlet-name>
-        <servlet-class>org.openshift.quickstarts.todolist.servlet.MetricsServlet</servlet-class>
+        <servlet-class>org.openshift.quickstarts.todolist.servlet.MetricServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
